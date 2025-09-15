@@ -1,22 +1,20 @@
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import type { BuilderState } from '@/app/page';
 
-interface TemplateProps {
-  headline: string;
-  description: string;
-  ctaType: 'buy' | 'offer';
-  ctaPrice: string;
+interface TemplateProps extends BuilderState {
   domain: string;
 }
 
-export function ModernTemplate({ headline, description, ctaType, ctaPrice }: TemplateProps) {
+export function ModernTemplate({ headline, description, ctaType, ctaPrice, primaryColor }: TemplateProps) {
   const image = PlaceHolderImages.find(img => img.id === 'template-modern');
 
   return (
     <div className="bg-background text-foreground min-h-screen">
       <style>{`
+        :root { --primary-template: ${primaryColor}; }
         .template-button {
-          background-color: hsl(var(--accent));
+          background-color: hsl(var(--primary-template));
           color: hsl(var(--accent-foreground));
           padding: 1rem 2rem;
           border-radius: 0.5rem;
@@ -24,7 +22,7 @@ export function ModernTemplate({ headline, description, ctaType, ctaPrice }: Tem
           transition: background-color 0.2s;
         }
         .template-button:hover {
-          background-color: hsl(var(--accent) / 0.9);
+          filter: brightness(0.9);
         }
       `}</style>
       <main className="container mx-auto px-6 py-24 text-center">
@@ -41,11 +39,13 @@ export function ModernTemplate({ headline, description, ctaType, ctaPrice }: Tem
               />
             </div>
           )}
-          <h1 className="font-headline text-5xl md:text-7xl mb-4 text-primary">{headline}</h1>
+          <h1 className="font-headline text-5xl md:text-7xl mb-4" style={{color: `hsl(${primaryColor})`}}>{headline}</h1>
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">{description}</p>
-          <button className="template-button">
-            {ctaType === 'buy' ? `Buy Now for $${ctaPrice}` : 'Make an Offer'}
-          </button>
+          {ctaType !== 'none' && (
+            <button className="template-button">
+              {ctaType === 'buy' ? `Buy Now for $${ctaPrice}` : 'Make an Offer'}
+            </button>
+          )}
         </div>
       </main>
     </div>

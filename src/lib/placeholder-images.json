@@ -1,6 +1,12 @@
 {
   "placeholderImages": [
     {
+      "id": "template-saas",
+      "description": "A modern template suitable for a SaaS product.",
+      "imageUrl": "https://picsum.photos/seed/template4/1440/900",
+      "imageHint": "saas product ui"
+    },
+    {
       "id": "template-modern",
       "description": "A modern and clean template with a large hero image.",
       "imageUrl": "https://picsum.photos/seed/template1/1440/900",

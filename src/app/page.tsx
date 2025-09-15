@@ -9,8 +9,21 @@ import type { GenerateSEOMetadataOutput } from '@/ai/flows/generate-seo-metadata
 import { getSeoMetadataAction } from './actions';
 import { useToast } from "@/hooks/use-toast"
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { LayoutDashboard } from 'lucide-react';
 
-export type Template = 'modern' | 'minimal' | 'portfolio';
+export type Template = 'modern' | 'minimal' | 'portfolio' | 'saas';
+export type CtaType = 'buy' | 'offer' | 'none';
+export type BuilderState = {
+  template: Template;
+  headline: string;
+  description: string;
+  ctaType: CtaType;
+  ctaPrice: string;
+  logoIcon: string;
+  secondaryCtaText: string;
+  secondaryCtaLink: string;
+  primaryColor: string;
+};
 
 export default function Home() {
   const [domain, setDomain] = useState('');
@@ -19,17 +32,27 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const [selectedTemplate, setSelectedTemplate] = useState<Template>('modern');
-  const [headline, setHeadline] = useState('');
-  const [description, setDescription] = useState('');
-  const [ctaType, setCtaType] = useState<'buy' | 'offer'>('buy');
-  const [ctaPrice, setCtaPrice] = useState('999');
+  const [builderState, setBuilderState] = useState<BuilderState>({
+    template: 'saas',
+    headline: '',
+    description: '',
+    ctaType: 'buy',
+    ctaPrice: '999',
+    logoIcon: 'LayoutDashboard',
+    secondaryCtaText: '',
+    secondaryCtaLink: '#',
+    primaryColor: '158 100% 47.6%',
+  });
+
+  const updateBuilderState = (updates: Partial<BuilderState>) => {
+    setBuilderState(prevState => ({ ...prevState, ...updates }));
+  };
 
   const ogImage = useMemo(() => {
     return PlaceHolderImages.find(img => img.id === 'opengraph')?.imageUrl || 'https://picsum.photos/seed/og1/1200/630';
   }, []);
 
-  const handleGenerateSeo = useCallback(async (currentDomain: string, currentHeadline: string, currentDescription: string) => {
+  const handleGenerateSeo = useCallback(async (currentDomain: string) => {
     if (!currentDomain) {
       toast({
         variant: "destructive",
@@ -42,7 +65,7 @@ export default function Home() {
     setLoading(true);
     setStep('build');
 
-    const landingPageContent = `Headline: ${currentHeadline}\nDescription: ${currentDescription}`;
+    const landingPageContent = `Headline: ${builderState.headline}\nDescription: ${builderState.description}`;
 
     const result = await getSeoMetadataAction({ domainName: currentDomain, landingPageContent });
     
@@ -51,15 +74,14 @@ export default function Home() {
         ...result.data,
         openGraphPreview: ogImage,
       });
-      if(!headline) setHeadline(result.data.title);
-      if(!description) setDescription(result.data.description.substring(0, 150));
+      if(!builderState.headline) updateBuilderState({ headline: result.data.title });
+      if(!builderState.description) updateBuilderState({ description: result.data.description.substring(0, 150) });
     } else {
       toast({
         variant: "destructive",
         title: "Generation Failed",
         description: result.error || 'Could not generate SEO metadata.',
       });
-      // Set some default data on failure so the UI doesn't break
       setSeoData({
         title: currentDomain,
         description: 'A premium domain.',
@@ -74,12 +96,14 @@ export default function Home() {
       });
     }
     setLoading(false);
-  }, [toast, ogImage, headline, description]);
+  }, [toast, ogImage, builderState.headline, builderState.description]);
 
   useEffect(() => {
     if (domain) {
-      setHeadline(domain.split('.')[0].charAt(0).toUpperCase() + domain.split('.')[0].slice(1));
-      setDescription('Enter a short, captivating description for your landing page here.');
+      updateBuilderState({
+        headline: domain.split('.')[0].charAt(0).toUpperCase() + domain.split('.')[0].slice(1),
+        description: 'Enter a short, captivating description for your landing page here.',
+      });
     }
   }, [domain]);
 
@@ -105,26 +129,14 @@ export default function Home() {
           <div className="py-12 md:py-24 grid grid-cols-1 lg:grid-cols-10 gap-8">
             <div className="lg:col-span-4">
               <BuilderControls
-                selectedTemplate={selectedTemplate}
-                setSelectedTemplate={setSelectedTemplate}
-                headline={headline}
-                setHeadline={setHeadline}
-                description={description}
-                setDescription={setDescription}
-                ctaType={ctaType}
-                setCtaType={setCtaType}
-                ctaPrice={ctaPrice}
-                setCtaPrice={setCtaPrice}
+                builderState={builderState}
+                updateBuilderState={updateBuilderState}
                 domain={domain}
               />
             </div>
             <div className="lg:col-span-6">
               <BuilderPreview
-                template={selectedTemplate}
-                headline={headline}
-                description={description}
-                ctaType={ctaType}
-                ctaPrice={ctaPrice}
+                builderState={builderState}
                 domain={domain}
               />
             </div>

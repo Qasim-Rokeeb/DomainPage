@@ -23,7 +23,7 @@ interface HeroSectionProps {
   domain: string;
   setDomain: (domain: string) => void;
   seoData: GenerateSEOMetadataOutput | null;
-  onGenerate: (domain: string, headline: string, description: string) => Promise<void>;
+  onGenerate: (domain: string) => Promise<void>;
   loading: boolean;
   step: 'input_domain' | 'build';
 }
@@ -62,11 +62,11 @@ export function HeroSection({ domain, setDomain, seoData, onGenerate, loading, s
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setDomain(data.domain);
-    await onGenerate(data.domain, '', '');
+    await onGenerate(data.domain);
   }
   
   const initialHeadline = 'yourdomain.com';
-  const displayedHeadline = showBuilder ? typedDomain : initialHeadline;
+  const displayedHeadline = showBuilder && domain ? typedDomain : initialHeadline;
 
   return (
     <section className="relative w-full h-screen flex items-center justify-center -mt-[5vh] animate-in fade-in slide-in-from-bottom-12 duration-1000">
@@ -116,7 +116,7 @@ export function HeroSection({ domain, setDomain, seoData, onGenerate, loading, s
                     )}
                   />
                   <Button type="submit" size="icon" className="h-12 w-12 bg-accent text-accent-foreground hover:bg-accent/90 focus-ring" disabled={loading}>
-                    {loading ? <Loader className="animate-spin" /> : <ArrowRight />}
+                    {loading ? <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div> : <ArrowRight />}
                   </Button>
                 </div>
               )}
