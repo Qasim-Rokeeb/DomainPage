@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { HeroSection } from '@/components/app/hero-section';
 import { BuilderControls } from '@/components/app/builder-controls';
 import { BuilderPreview } from '@/components/app/builder-preview';
-import { SeoFooter } from '@/components/app/seo-footer';
+import { Footer } from '@/components/app/footer';
 import type { GenerateSEOMetadataOutput } from '@/ai/flows/generate-seo-metadata';
 import { getSeoMetadataAction } from './actions';
 import { useToast } from "@/hooks/use-toast"
@@ -132,7 +132,7 @@ export default function Home() {
         </div>
       </main>
       
-      <SeoFooter seoData={seoData} isVisible={step === 'build'} />
+      <Footer />
     </div>
   );
 }
