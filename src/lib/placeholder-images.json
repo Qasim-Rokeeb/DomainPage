@@ -1,3 +1,28 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "template-modern",
+      "description": "A modern and clean template with a large hero image.",
+      "imageUrl": "https://picsum.photos/seed/template1/1440/900",
+      "imageHint": "modern abstract"
+    },
+    {
+      "id": "template-minimal",
+      "description": "A minimal template with a focus on typography.",
+      "imageUrl": "https://picsum.photos/seed/template2/1440/900",
+      "imageHint": "minimal architecture"
+    },
+    {
+      "id": "template-portfolio",
+      "description": "A portfolio-style template to showcase work.",
+      "imageUrl": "https://picsum.photos/seed/template3/1440/900",
+      "imageHint": "creative portfolio"
+    },
+    {
+      "id": "opengraph",
+      "description": "Default OpenGraph preview image.",
+      "imageUrl": "https://picsum.photos/seed/og1/1200/630",
+      "imageHint": "tech branding"
+    }
+  ]
 }

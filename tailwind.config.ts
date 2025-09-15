@@ -8,11 +8,18 @@ export default {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
+    },
     extend: {
       fontFamily: {
+        headline: ['Neue Montreal', 'sans-serif'],
         body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
-        code: ['monospace'],
+        code: ['SF Mono', 'ui-monospace', 'monospace'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -88,11 +95,20 @@ export default {
             height: '0',
           },
         },
+        'pulse-glow': {
+          '0%': { boxShadow: '0 0 0 0 hsl(var(--accent) / 0.7)' },
+          '70%': { boxShadow: '0 0 0 10px hsl(var(--accent) / 0)' },
+          '100%': { boxShadow: '0 0 0 0 hsl(var(--accent) / 0)' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'pulse-glow': 'pulse-glow 2s infinite',
       },
+      boxShadow: {
+        'z2': '0 2px 8px rgba(0,0,0,0.24)',
+      }
     },
   },
   plugins: [require('tailwindcss-animate')],
